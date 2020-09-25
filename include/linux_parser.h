@@ -3,7 +3,9 @@
 
 #include <fstream>
 #include <regex>
+#include <sstream>
 #include <string>
+#include <vector>
 
 namespace LinuxParser {
 // Paths
@@ -52,6 +54,33 @@ std::string Ram(int pid);
 std::string Uid(int pid);
 std::string User(int pid);
 long int UpTime(int pid);
+
+// Template Parser
+template <typename KeyType, typename ValueType>
+ValueType Parser(KeyType& key, std::ifstream& stream) {
+  std::string line;
+  KeyType keyCurr;
+  ValueType value;
+
+  if (stream.is_open()) {
+    while (std::getline(stream, line)) {
+      std::istringstream linestream(line);
+      linestream >> keyCurr;
+      if (keyCurr == key) {
+        linestream >> value;
+        return value;
+      }
+    }
+  }
+  return value;
+}
+
+// Jiffies Vectors
+std::vector<long> JiffiesVect();
+std::vector<long> JiffiesPidVect(int pid);
+
+// Additional Process
+float CpuUtilization(int pid);
 };  // namespace LinuxParser
 
 #endif
